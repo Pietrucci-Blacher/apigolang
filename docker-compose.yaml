@@ -1,0 +1,15 @@
+services:
+  db:
+    container_name: database
+    image: mysql
+    environment:
+      MYSQL_DATABASE: go_api
+      MYSQL_ROOT_PASSWORD: azerty
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
