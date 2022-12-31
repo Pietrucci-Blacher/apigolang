@@ -17,7 +17,7 @@ func CreatePayment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	id, err := model.ModelInstance.CreatePayment(payment)
+	id, err := model.ModelInstance.CreatePayment(&payment)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -33,7 +33,7 @@ func UpdatePayment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := model.ModelInstance.UpdatePayment(payment); err != nil {
+	if err := model.ModelInstance.UpdatePayment(&payment); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

@@ -1,0 +1,78 @@
+definitions:
+  model.Product:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/products:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Product'
+            type: array
+      summary: récupère tous les produits de la base de données et les renvoie en
+        format JSON
+      tags:
+      - Product
+  /api/products/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product object
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/model.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+      summary: crée un nouveau produit dans la base de données et le renvoie en format
+        JSON
+      tags:
+      - Product
+  /api/products/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+      summary: récupère le produit de la base de données avec son id et les renvoie
+        en format JSON
+      tags:
+      - Product
+swagger: "2.0"

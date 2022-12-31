@@ -12,7 +12,7 @@ type Payment struct {
 }
 
 // CreatePayment crée un nouveau paiement dans la base de données et renvoie l'ID du paiement
-func (conn Connection) CreatePayment(payment Payment) (int, error) {
+func (conn *Connection) CreatePayment(payment *Payment) (int, error) {
 	// prépare la requête pour insérer le paiement dans la base de données
 	stmt, err := conn.DB.Prepare("INSERT INTO payment (product_id, price_paid, created_at, updated_at) VALUES (?, ?, ?, ?)")
 	if err != nil {
@@ -36,7 +36,7 @@ func (conn Connection) CreatePayment(payment Payment) (int, error) {
 }
 
 // UpdatePayment met à jour un paiement dans la base de données
-func (conn Connection) UpdatePayment(payment Payment) error {
+func (conn *Connection) UpdatePayment(payment *Payment) error {
 	// prépare la requête pour mettre à jour le paiement dans la base de données
 	stmt, err := conn.DB.Prepare("UPDATE payment SET product_id = ?, price_paid = ?, updated_at = ? WHERE id = ?")
 	if err != nil {
@@ -54,7 +54,7 @@ func (conn Connection) UpdatePayment(payment Payment) error {
 }
 
 // DeletePayment supprime un paiement de la base de données
-func (conn Connection) DeletePayment(id int) error {
+func (conn *Connection) DeletePayment(id int) error {
 	// prépare la requête pour supprimer le paiement de la base de données
 	stmt, err := conn.DB.Prepare("DELETE FROM payment WHERE id = ?")
 	if err != nil {
@@ -72,7 +72,7 @@ func (conn Connection) DeletePayment(id int) error {
 }
 
 // GetPaymentById récupère un paiement de la base de données par son ID
-func (conn Connection) GetPaymentById(id int) (Payment, error) {
+func (conn *Connection) GetPaymentById(id int) (Payment, error) {
 	// prépare la requête pour récupérer le paiement de la base de données
 	stmt, err := conn.DB.Prepare("SELECT id, product_id, price_paid, created_at, updated_at FROM payment WHERE id = ?")
 	if err != nil {
@@ -91,7 +91,7 @@ func (conn Connection) GetPaymentById(id int) (Payment, error) {
 }
 
 // GetAllPayments récupère tous les paiements de la base de données
-func (conn Connection) GetAllPayments() ([]Payment, error) {
+func (conn *Connection) GetAllPayments() ([]Payment, error) {
 	// prépare la requête pour récupérer tous les paiements de la base de données
 	stmt, err := conn.DB.Prepare("SELECT id, product_id, price_paid, created_at, updated_at FROM payment")
 	if err != nil {
