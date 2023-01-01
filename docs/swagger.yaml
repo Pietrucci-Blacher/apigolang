@@ -1,4 +1,23 @@
 definitions:
+  controller.dataCreateProductPost:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  controller.dataGetAllProductsReturn:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+    type: object
+  controller.dataGetProductByIdReturn:
+    properties:
+      data:
+        $ref: '#/definitions/model.Product'
+    type: object
   model.Product:
     properties:
       created_at:
@@ -25,9 +44,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Product'
-            type: array
+            $ref: '#/definitions/controller.dataGetAllProductsReturn'
       summary: récupère tous les produits de la base de données et les renvoie en
         format JSON
       tags:
@@ -42,14 +59,14 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/model.Product'
+          $ref: '#/definitions/controller.dataCreateProductPost'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Product'
+            $ref: '#/definitions/controller.dataGetProductByIdReturn'
       summary: crée un nouveau produit dans la base de données et le renvoie en format
         JSON
       tags:
@@ -70,7 +87,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Product'
+            $ref: '#/definitions/controller.dataGetProductByIdReturn'
       summary: récupère le produit de la base de données avec son id et les renvoie
         en format JSON
       tags:

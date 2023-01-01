@@ -32,10 +32,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Product"
-                            }
+                            "$ref": "#/definitions/controller.dataGetAllProductsReturn"
                         }
                     }
                 }
@@ -60,7 +57,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Product"
+                            "$ref": "#/definitions/controller.dataCreateProductPost"
                         }
                     }
                 ],
@@ -68,7 +65,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Product"
+                            "$ref": "#/definitions/controller.dataGetProductByIdReturn"
                         }
                     }
                 }
@@ -99,7 +96,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Product"
+                            "$ref": "#/definitions/controller.dataGetProductByIdReturn"
                         }
                     }
                 }
@@ -107,6 +104,36 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controller.dataCreateProductPost": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
+        "controller.dataGetAllProductsReturn": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
+                }
+            }
+        },
+        "controller.dataGetProductByIdReturn": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.Product"
+                }
+            }
+        },
         "model.Product": {
             "type": "object",
             "properties": {

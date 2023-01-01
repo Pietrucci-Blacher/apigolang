@@ -9,11 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type dataGetAllProductsReturn struct {
+	Data []model.Product `json:"data"`
+}
+
+type dataGetProductByIdReturn struct {
+	Data model.Product `json:"data"`
+}
+
+type dataCreateProductPost struct {
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+}
+
 // @Summary récupère tous les produits de la base de données et les renvoie en format JSON
 // @Tags Product
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} []model.Product
+// @Success 200 {object} dataGetAllProductsReturn
 // @Router /api/products [get]
 func GetAllProducts(c *gin.Context) {
 	products, err := model.ModelInstance.GetAllProducts()
@@ -29,7 +42,7 @@ func GetAllProducts(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "Product ID"
-// @Success 200 {object} model.Product
+// @Success 200 {object} dataGetProductByIdReturn
 // @Router /api/products/{id} [get]
 func GetProductById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -49,8 +62,8 @@ func GetProductById(c *gin.Context) {
 // @Tags Product
 // @Accept  json
 // @Produce  json
-// @Param product body model.Product true "Product object"
-// @Success 200 {object} model.Product
+// @Param product body dataCreateProductPost true "Product object"
+// @Success 200 {object} dataGetProductByIdReturn
 // @Router /api/products/ [post]
 func CreateProduct(c *gin.Context) {
 	var product model.Product
