@@ -8,6 +8,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type dataLogin struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type dataLoginResponse struct {
+	Token string `json:"token"`
+}
+
+// @Summary route de connexion
+// @Tags Auth
+// @Accept  json
+// @Produce  json
+// @Param login body dataLogin true "Login"
+// @Success 200 {object} dataLoginResponse
+// @Router /api/auth/login [post]
 func Login(c *gin.Context) {
 	var user model.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -26,6 +42,13 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
+// @Summary route d'inscription
+// @Tags Auth
+// @Accept  json
+// @Produce  json
+// @Param register body dataLogin true "Login"
+// @Success 200 {object} dataBoolean
+// @Router /api/auth/register [post]
 func Register(c *gin.Context) {
 	var user model.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -39,5 +62,5 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
+	c.JSON(http.StatusOK, gin.H{"data": true})
 }

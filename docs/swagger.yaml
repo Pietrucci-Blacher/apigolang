@@ -42,6 +42,21 @@ definitions:
       data:
         $ref: '#/definitions/model.Product'
     type: object
+  controller.dataLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controller.dataLoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
   model.Payment:
     properties:
       created_at:
@@ -71,6 +86,48 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/controller.dataLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.dataLoginResponse'
+      summary: route de connexion
+      tags:
+      - Auth
+  /api/auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/controller.dataLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.dataBoolean'
+      summary: route d'inscription
+      tags:
+      - Auth
   /api/payments:
     get:
       consumes:
