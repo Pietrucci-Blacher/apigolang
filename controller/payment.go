@@ -10,7 +10,63 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreatePayment crée un nouveau paiement dans la base de données et le renvoie en format JSON
+type dataGetAllPaymentReturn struct {
+	Data []model.Payment `json:"data"`
+}
+
+type dataGetPaymentByIdReturn struct {
+	Data model.Payment `json:"data"`
+}
+
+type dataCreatePaymentPost struct {
+	ProductID int     `json:"product_id"`
+	PricePaid float64 `json:"price_paid"`
+}
+
+// @Summary récupère tous les paiements de la base de données et les renvoie en format JSON
+// @Tags Payments
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} dataGetAllPaymentReturn
+// @Router /api/payments [get]
+func GetAllPayments(c *gin.Context) {
+	payments, err := model.ModelInstance.GetAllPayments()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": payments})
+}
+
+// GetPaymentById
+// @Summary récupère un paiement de la base de données par son ID et le renvoie en format JSON
+// @Tags Payments
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Product ID"
+// @Success 200 {object} dataGetPaymentByIdReturn
+// @Router /api/payments/{id} [get]
+func GetPaymentById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payment ID"})
+		return
+	}
+	payment, err := model.ModelInstance.GetPaymentById(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": payment})
+}
+
+// @Summary crée un nouveau paiement dans la base de données et le renvoie en format JSON
+// @Tags Payments
+// @Accept  json
+// @Produce  json
+// @Param payment body dataCreatePaymentPost true "Product object"
+// @Success 200 {object} dataGetPaymentByIdReturn
+// @Router /api/payments [post]
 func CreatePayment(c *gin.Context) {
 	var payment model.Payment
 	if err := c.ShouldBindJSON(&payment); err != nil {
@@ -26,7 +82,13 @@ func CreatePayment(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"data": payment})
 }
 
-// UpdatePayment met à jour un paiement dans la base de données et le renvoie en format JSON
+// @Summary met à jour un paiement dans la base de données et le renvoie en format JSON
+// @Tags Payments
+// @Accept  json
+// @Produce  json
+// @Param payment body dataCreatePaymentPost true "Product object"
+// @Success 200 {object} dataGetPaymentByIdReturn
+// @Router /api/payments [put]
 func UpdatePayment(c *gin.Context) {
 	var payment model.Payment
 	if err := c.ShouldBindJSON(&payment); err != nil {
@@ -40,7 +102,13 @@ func UpdatePayment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": payment})
 }
 
-// DeletePayment supprime un paiement de la base de données
+// @Summary met à jour un paiement dans la base de données et le renvoie en format JSON
+// @Tags Payments
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Product ID"
+// @Success 200 {object} dataBoolean
+// @Router /api/payments/{id} [delete]
 func DeletePayment(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -52,21 +120,6 @@ func DeletePayment(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": true})
-}
-
-// GetPaymentById récupère un paiement de la base de données par son ID et le renvoie en format JSON
-func GetPaymentById(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payment ID"})
-		return
-	}
-	payment, err := model.ModelInstance.GetPaymentById(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data": payment})
 }
 
 func StreamPayments(c *gin.Context) {

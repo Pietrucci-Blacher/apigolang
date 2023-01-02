@@ -22,6 +22,10 @@ type dataCreateProductPost struct {
 	Price float64 `json:"price"`
 }
 
+type dataBoolean struct {
+	Data bool `json:"data"`
+}
+
 // @Summary récupère tous les produits de la base de données et les renvoie en format JSON
 // @Tags Product
 // @Accept  json
@@ -80,7 +84,13 @@ func CreateProduct(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"data": product})
 }
 
-// UpdateProduct met à jour un produit dans la base de données et le renvoie en format JSON
+// @Summary met à jour un produit dans la base de données et le renvoie en format JSON
+// @Tags Product
+// @Accept  json
+// @Produce  json
+// @Param product body dataCreateProductPost true "Product object"
+// @Success 200 {object} dataGetProductByIdReturn
+// @Router /api/products/ [put]
 func UpdateProduct(c *gin.Context) {
 	var product model.Product
 	if err := c.ShouldBindJSON(&product); err != nil {
@@ -94,7 +104,13 @@ func UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": product})
 }
 
-// DeleteProduct supprime un produit de la base de données
+// @Summary supprime un produit de la base de données
+// @Tags Product
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Product ID"
+// @Success 200 {object} dataBoolean
+// @Router /api/products/{id} [delete]
 func DeleteProduct(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -106,14 +122,4 @@ func DeleteProduct(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": true})
-}
-
-// GetAllPayments récupère tous les paiements de la base de données et les renvoie en format JSON
-func GetAllPayments(c *gin.Context) {
-	payments, err := model.ModelInstance.GetAllPayments()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data": payments})
 }
