@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"errors"
+	"fmt"
+	"time"
+)
 
 // Payment est la structure de données pour un paiement
 type Payment struct {
@@ -11,8 +15,52 @@ type Payment struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// compte le nombre de payment dans la base de données pour un id donné
+func (conn *Connection) CountPaymentById(id int) (int, error) {
+	// prépare la requête pour compter le nombre de paiements
+	stmt, err := conn.DB.Prepare("SELECT COUNT(id) FROM payment WHERE id = ?")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	// exécute la requête avec l'ID du payment
+	var count int
+	err = stmt.QueryRow(id).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (conn *Connection) CountPaymentByName(name string) (int, error) {
+	// prépare la requête pour compter le nombre de paiement
+	stmt, err := conn.DB.Prepare("SELECT COUNT(id) FROM payment WHERE name = ?")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	// exécute la requête avec le nom du paiement
+	var count int
+	err = stmt.QueryRow(name).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 // CreatePayment crée un nouveau paiement dans la base de données et renvoie l'ID du paiement
 func (conn *Connection) CreatePayment(payment *Payment) (int, error) {
+	countProduct, err := conn.CountProductById(payment.ProductID)
+	if countProduct == 0 {
+		return 0, errors.New("Product not found")
+	} else if err != nil {
+		return 0, err
+	}
+
 	// prépare la requête pour insérer le paiement dans la base de données
 	stmt, err := conn.DB.Prepare("INSERT INTO payment (product_id, price_paid, created_at, updated_at) VALUES (?, ?, ?, ?)")
 	if err != nil {
@@ -37,6 +85,14 @@ func (conn *Connection) CreatePayment(payment *Payment) (int, error) {
 
 // UpdatePayment met à jour un paiement dans la base de données
 func (conn *Connection) UpdatePayment(payment *Payment) error {
+	countId, err := conn.CountPaymentById(payment.ProductID)
+	fmt.Println("count id ", countId)
+	if countId == 0 {
+		return errors.New("Product not found")
+	} else if err != nil {
+		return err
+	}
+
 	// prépare la requête pour mettre à jour le paiement dans la base de données
 	stmt, err := conn.DB.Prepare("UPDATE payment SET product_id = ?, price_paid = ?, updated_at = ? WHERE id = ?")
 	if err != nil {

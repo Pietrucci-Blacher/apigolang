@@ -24,7 +24,7 @@ func RegisterRoutes(r *gin.Engine) {
 		{
 			products.GET("", controller.GetAllProducts)
 			products.POST("", controller.CreateProduct)
-			products.PUT("/:id", controller.UpdateProduct)
+			products.PUT("", controller.UpdateProduct)
 			products.DELETE("/:id", controller.DeleteProduct)
 			products.GET("/:id", controller.GetProductById)
 		}
@@ -32,7 +32,7 @@ func RegisterRoutes(r *gin.Engine) {
 		{
 			payments.GET("", controller.GetAllPayments)
 			payments.POST("", controller.CreatePayment)
-			payments.PUT("/:id", controller.UpdatePayment)
+			payments.PUT("", controller.UpdatePayment)
 			payments.DELETE("/:id", controller.DeletePayment)
 			payments.GET("/:id", controller.GetPaymentById)
 			payments.GET("/stream", controller.StreamPayments)

@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 // Product est la structure de données pour un produit
 type Product struct {
@@ -11,8 +14,52 @@ type Product struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// compte le nombre de produits dans la base de données pour un id donné
+func (conn *Connection) CountProductById(id int) (int, error) {
+	// prépare la requête pour compter le nombre de produits
+	stmt, err := conn.DB.Prepare("SELECT COUNT(id) FROM product WHERE id = ?")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	// exécute la requête avec l'ID du produit
+	var count int
+	err = stmt.QueryRow(id).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (conn *Connection) CountProductByName(name string) (int, error) {
+	// prépare la requête pour compter le nombre de produits
+	stmt, err := conn.DB.Prepare("SELECT COUNT(id) FROM product WHERE name = ?")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	// exécute la requête avec le nom du produit
+	var count int
+	err = stmt.QueryRow(name).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 // CreateProduct crée un nouveau produit dans la base de données et renvoie l'ID du produit
 func (conn *Connection) CreateProduct(product *Product) (int, error) {
+	count, err := conn.CountProductByName(product.Name)
+	if count > 0 {
+		return 0, errors.New("Product already exists")
+	} else if err != nil {
+		return 0, err
+	}
+
 	// prépare la requête pour insérer le produit dans la base de données
 	stmt, err := conn.DB.Prepare("INSERT INTO product (name, price, created_at, updated_at) VALUES (?, ?, ?, ?)")
 	if err != nil {
@@ -37,6 +84,17 @@ func (conn *Connection) CreateProduct(product *Product) (int, error) {
 
 // UpdateProduct met à jour un produit dans la base de données
 func (conn *Connection) UpdateProduct(product *Product) error {
+	countId, err := conn.CountProductById(product.ID)
+	// countName, err := conn.CountProductByName(product.Name)
+
+	if countId == 0 {
+		return errors.New("Product not found")
+		// } else if countName > 0 {
+		// 	return errors.New("Product name already exists")
+	} else if err != nil {
+		return err
+	}
+
 	// prépare la requête pour mettre à jour le produit dans la base de données
 	stmt, err := conn.DB.Prepare("UPDATE product SET name = ?, price = ?, updated_at = ? WHERE id = ?")
 	if err != nil {
