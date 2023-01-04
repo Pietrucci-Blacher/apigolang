@@ -29,7 +29,7 @@ DB_NAME=go_api
 JWT_SECRET=mysecret
 ```
 
-## run Golang api
+## Run Golang api
 
 ```
 go run main.go
