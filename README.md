@@ -16,5 +16,5 @@ and import this file `go_api.sql` in [adminer](http://localhost:8080)
 
 ## Link
 
-[Api](http://localhost:8081/)
-[Swagger](http://localhost:8081/api/swagger/index.html)
+* [Api](http://localhost:8081/)
+* [Swagger](http://localhost:8081/api/swagger/index.html)
