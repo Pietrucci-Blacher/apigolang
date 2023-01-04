@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -124,11 +123,17 @@ func DeletePayment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
 
+// @Summary récupère tous les paiements de la base de données et les renvoie
+// @Tags Payments
+// @Accept  json
+// @Produce  json
+// @Router /api/payments/stream [get]
 func StreamPayments(c *gin.Context) {
 	// Set the headers for SSE
 	c.Header("Content-Type", "text/event-stream")
 	c.Header("Cache-Control", "no-cache")
 	c.Header("Connection", "keep-alive")
+	c.Header("Access-Control-Allow-Origin", "*")
 
 	// Create a new ticker that sends a message to the client every 5 seconds
 	ticker := time.NewTicker(5 * time.Second)
@@ -136,17 +141,9 @@ func StreamPayments(c *gin.Context) {
 
 	// Create a channel that receives a message when the client closes the connection
 	closed := make(chan bool, 1)
+
 	c.Stream(func(w io.Writer) bool {
-		// Send a message to the client
-		if _, err := fmt.Fprintf(w, "data: %s\n\n", time.Now().String()); err != nil {
-			return false
-		}
-
-		// Flush the data to the client
-		if f, ok := w.(http.Flusher); ok {
-			f.Flush()
-		}
-
+		c.SSEvent("message", "je suis un test")
 		select {
 		case <-ticker.C:
 			return true
@@ -155,10 +152,3 @@ func StreamPayments(c *gin.Context) {
 		}
 	})
 }
-
-// func StreamPayments(c *gin.Context) {
-// 	c.Stream(func(w io.Writer) bool {
-// 		c.SSEvent("message", "Hello world")
-// 		return true
-// 	})
-// }

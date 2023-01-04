@@ -226,6 +226,16 @@ paths:
         en format JSON
       tags:
       - Payments
+  /api/payments/stream:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      summary: récupère tous les paiements de la base de données et les renvoie
+      tags:
+      - Payments
   /api/products:
     get:
       consumes:

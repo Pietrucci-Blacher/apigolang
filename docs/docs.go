@@ -166,6 +166,21 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/payments/stream": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "récupère tous les paiements de la base de données et les renvoie",
+                "responses": {}
+            }
+        },
         "/api/payments/{id}": {
             "get": {
                 "consumes": [
