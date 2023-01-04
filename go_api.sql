@@ -27,3 +27,13 @@ CREATE TABLE user (
     updated_at DATETIME NOT NULL,
     PRIMARY KEY (id)
 );
+
+-- create a table for authentification with id user_id token created_at updated_at
+CREATE TABLE authentification (
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    PRIMARY KEY (id)
+);

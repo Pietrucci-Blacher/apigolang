@@ -9,6 +9,7 @@ import (
 	"apigolang/model"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type dataGetAllPaymentReturn struct {
@@ -135,15 +136,15 @@ func StreamPayments(c *gin.Context) {
 	c.Header("Connection", "keep-alive")
 	c.Header("Access-Control-Allow-Origin", "*")
 
-	// Create a new ticker that sends a message to the client every 5 seconds
-	ticker := time.NewTicker(5 * time.Second)
+	// Create a new ticker that sends a message to the client every 3 seconds
+	ticker := time.NewTicker(3 * time.Second)
 	defer ticker.Stop()
 
 	// Create a channel that receives a message when the client closes the connection
 	closed := make(chan bool, 1)
 
 	c.Stream(func(w io.Writer) bool {
-		c.SSEvent("message", "je suis un test")
+		c.SSEvent("message", "payment test : "+time.Now().String())
 		select {
 		case <-ticker.C:
 			return true

@@ -34,24 +34,6 @@ func (conn *Connection) CountPaymentById(id int) (int, error) {
 	return count, nil
 }
 
-func (conn *Connection) CountPaymentByName(name string) (int, error) {
-	// prépare la requête pour compter le nombre de paiement
-	stmt, err := conn.DB.Prepare("SELECT COUNT(id) FROM payment WHERE name = ?")
-	if err != nil {
-		return 0, err
-	}
-	defer stmt.Close()
-
-	// exécute la requête avec le nom du paiement
-	var count int
-	err = stmt.QueryRow(name).Scan(&count)
-	if err != nil {
-		return 0, err
-	}
-
-	return count, nil
-}
-
 // CreatePayment crée un nouveau paiement dans la base de données et renvoie l'ID du paiement
 func (conn *Connection) CreatePayment(payment *Payment) (int, error) {
 	countProduct, err := conn.CountProductById(payment.ProductID)

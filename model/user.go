@@ -60,5 +60,17 @@ func (conn *Connection) AuthenticateUser(user *User) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	stmt, err := conn.DB.Prepare("INSERT INTO authentification (user_id, token, created_at, updated_at) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		return "", err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(storedUser.ID, signedToken, time.Now(), time.Now())
+	if err != nil {
+		return "", err
+	}
+
 	return signedToken, nil
 }
